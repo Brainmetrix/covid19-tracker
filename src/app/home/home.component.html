@@ -1,0 +1,253 @@
+<div class="flex-container">
+
+    <div>
+        <div class="main-card">
+            <div class="cards-container" style="background: rgba(255, 7, 58, .6)">
+                <div class="aggregate">
+                    <div class="expense-title">
+                        Confirmed
+                    </div>
+                    <div class="cost">
+                        <span>[ +{{DailyStatus.total.confirmed | number}} ] </span>
+                        <h1 class="count">
+                            {{statewisecase.confirmed | number}}
+                        </h1>
+                    </div>
+                    <div class="bg-icon">
+                        <fa-icon [icon]="faClipboardCheck"></fa-icon>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cards-container" style="background: rgba(0, 123, 255, .6)">
+                <div class="aggregate">
+                    <div class="expense-title">
+                        Active
+                    </div>
+                    <div class="cost">
+                        <span>[ +{{DailyStatus.total.active | number}} ]</span>
+                        <h1 class="count">
+                            {{statewisecase.active | number}}
+                        </h1>
+                    </div>
+                    <div class="bg-icon" style="left: calc(100% - 52px) !important;">
+                        <fa-icon [icon]="faChartLine"></fa-icon>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cards-container" style="background: #52c41a">
+                <div class="aggregate">
+                    <div class="expense-title">
+                        Recovered
+                    </div>
+                    <div class="cost">
+                        <span>[ +{{DailyStatus.total.recovered | number}} ] </span>
+                        <h1 class="count">
+                            {{statewisecase.recovered | number}}
+                        </h1>
+                    </div>
+                    <div class="bg-icon" style="left: calc(100% - 62px) !important;">
+                        <fa-icon [icon]="faUserShield"></fa-icon>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cards-container" style="background: #464d53">
+                <div class="aggregate">
+                    <div class="expense-title">
+                        Deceased
+                    </div>
+                    <div class="cost">
+                        <span>[ +{{DailyStatus.total.deaths | number}} ] </span>
+                        <h1 class="count">
+                            {{statewisecase.deaths | number}}
+                        </h1>
+                    </div>
+                    <div class="bg-icon">
+                        <fa-icon [icon]="faSkullCrossbones"></fa-icon>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div>
+
+        <div class="table-responsive">
+            <!-- Search Bar -->
+            <hr>
+
+            <form>
+                <input type="text" name="search" placeholder="Search your state..." [(ngModel)]="search"
+                    (ngModelChange)="searchState($event);" (keydown.space)="$event.preventDefault();">
+            </form>
+            <hr>
+            <!-- Search Bar End oninput="this.value = this.value.toUpperCase()" -->
+
+            <table class="table table-sm table-hover" style="animation-delay: 1s; ">
+                <thead>
+                    <tr style="background: #f1f1f1">
+                        <th></th>
+                        <th class="heading" scope="col" style="color:#000 !important;">STATE / UT</th>
+                        <th class="heading" scope="col" style="color:#ff4d4f !important;">CONFIRM</th>
+                        <th class="heading" scope="col" style="color:#007bff !important;">ACTIVE</th>
+                        <th class="heading" scope="col" style="color:#28a745 !important;">RECOVER</th>
+                        <th class="heading" scope="col" style="color:#6c757d !important;">DEATH</th>
+                    </tr>
+                </thead>
+                <tbody *ngFor="let state of totalStateWiseCases" class="font">
+                    <tr (click)="state.show = !state.show; getDistrictKeys(state);" style="cursor: pointer !important;">
+                        <td>
+                            <fa-icon *ngIf="state?.show" [icon]="faChevronCircleUp " style="color:#007bff"></fa-icon>
+                            <fa-icon *ngIf="!state?.show" [icon]="faChevronCircleDown" style="color:#007bff"></fa-icon>
+                        </td>
+                        <td>{{state?.state?.name}}</td>
+                        <td>
+                            <span *ngIf='state?.delta?.confirmed' class="deltas " style="color: #ff073a; "><svg
+                                    xmlns="http://www.w3.org/2000/svg " width="24 " height="24 " viewBox="0 0 24 24"
+                                    fill="none " stroke="currentColor " stroke-width="2 " stroke-linecap="round "
+                                    stroke-linejoin="round ">
+                                    <line x1="12 " y1="19 " x2="12 " y2="5 "></line>
+                                    <polyline points="5 12 12 5 19 12 "></polyline>
+                                </svg>{{state?.delta?.confirmed | number}}
+                                <p style="color: #000"> {{state?.total?.confirmed | number}}</p>
+                            </span>
+                            <span *ngIf='!state?.delta?.confirmed'>
+                                {{state?.total?.confirmed | number}}
+                            </span>
+                        </td>
+                        <td>{{state?.total?.confirmed - (state?.total?.recovered + state?.total?.deceased) | number}}
+                        </td>
+                        <td>
+                            <span *ngIf='state?.delta?.recovered' class="deltas " style="color: #28a745; "><svg
+                                    xmlns="http://www.w3.org/2000/svg " width="24 " height="24 " viewBox="0 0 24 24"
+                                    fill="none " stroke="currentColor " stroke-width="2 " stroke-linecap="round "
+                                    stroke-linejoin="round ">
+                                    <line x1="12 " y1="19 " x2="12 " y2="5 "></line>
+                                    <polyline points="5 12 12 5 19 12 "></polyline>
+                                </svg>{{state?.delta?.recovered | number}}
+                                <p style="color: #000"> {{state?.total?.recovered | number}}</p>
+                            </span>
+                            <span *ngIf='!state?.delta?.recovered'>
+                                {{state?.total?.recovered | number}}
+                            </span>
+
+                        </td>
+                        <td>
+                            <span *ngIf='state?.delta?.deceased' class="deltas " style="color: #6c757d; "><svg
+                                    xmlns="http://www.w3.org/2000/svg " width="24 " height="24 " viewBox="0 0 24 24"
+                                    fill="none " stroke="currentColor " stroke-width="2 " stroke-linecap="round "
+                                    stroke-linejoin="round ">
+                                    <line x1="12 " y1="19 " x2="12 " y2="5 "></line>
+                                    <polyline points="5 12 12 5 19 12 "></polyline>
+                                </svg>{{state?.delta?.deceased | number}}
+                                <p style="color: #000"> {{state?.total?.deceased | number}}</p>
+                            </span>
+                            <span *ngIf='!state?.delta?.deceased'>
+                                {{state?.total?.deceased | number}}
+                            </span>
+                        </td>
+                    </tr>
+                    <ng-container>
+                        <tr class="table-dark" [hidden]="!state.show" style="animation-delay: 1s; ">
+                            <th scope="col" style="color:#000 !important;">DISTRICT</th>
+                            <th scope="col" style="color:#ff4d4f !important;">CONFIRM</th>
+                            <th scope="col" style="color:#007bff !important;">ACTIVE</th>
+                            <th scope="col" style="color:#28a745 !important;">RECOVER</th>
+                            <th scope="col" style="color:#6c757d !important;">DEATH</th>
+                        </tr>
+
+                        <tr [hidden]="!state.show" *ngFor="let r of districtsCode">
+                            <td>{{r}}</td>
+                            <td>
+                                <span *ngIf='state && state.district && state.district[r] && state.district[r].delta &&
+                                state.district[r].delta.confirmed; else elseBlock' class="deltas "
+                                    style="color: #ff073a; "><svg xmlns="http://www.w3.org/2000/svg " width="24 "
+                                        height="24 " viewBox="0 0 24 24" fill="none " stroke="currentColor "
+                                        stroke-width="2 " stroke-linecap="round " stroke-linejoin="round ">
+                                        <line x1="12 " y1="19 " x2="12 " y2="5 "></line>
+                                        <polyline points="5 12 12 5 19 12 "></polyline>
+                                    </svg>{{state && state.district && state.district[r] && state.district[r].delta &&
+                                    state.district[r].delta.confirmed | number}}
+                                    <p style="color: #000"> {{state && state.district && state.district[r] && state.district[r].total &&
+                                    state.district[r].total.confirmed | number}}
+                                    </p>
+                                </span>
+                                <ng-template #elseBlock>
+                                    {{state && state.district && state.district[r] && state.district[r].total &&
+                                    state.district[r].total.confirmed | number}}
+                                </ng-template>
+                                <!-- {{state && state.district && state.district[r] && state.district[r].total &&
+                                state.district[r].total.confirmed | number}} -->
+                            </td>
+                            <td>
+                                {{state && state.district && state.district[r] && state.district[r].total &&
+                                    state.district[r].total.confirmed
+                                            -
+                                            (
+                                                state && state.district && state.district[r] && state.district[r].total &&
+                                                state.district[r].total.recovered + (state && state.district && state.district[r] &&
+                                                state.district[r].total && state.district[r].total.deceased
+                                                ? state && state.district && state.district[r] && state.district[r].total &&
+                                                state.district[r].total.deceased : 0)
+                                            ) | number }}
+                            </td>
+                            <td>
+                                <span *ngIf='state && state.district && state.district[r] && state.district[r].delta &&
+                                state.district[r].delta.recovered; else recoverBlock' class="deltas "
+                                    style="color: #28a745; "><svg xmlns="http://www.w3.org/2000/svg " width="24 "
+                                        height="24 " viewBox="0 0 24 24" fill="none " stroke="currentColor "
+                                        stroke-width="2 " stroke-linecap="round " stroke-linejoin="round ">
+                                        <line x1="12 " y1="19 " x2="12 " y2="5 "></line>
+                                        <polyline points="5 12 12 5 19 12 "></polyline>
+                                    </svg>{{state && state.district && state.district[r] && state.district[r].delta &&
+                                    state.district[r].delta.recovered | number}}
+                                    <p style="color: #000"> {{state && state.district && state.district[r] && state.district[r].total &&
+                                    state.district[r].total.recovered | number}}
+                                    </p>
+                                </span>
+                                <ng-template #recoverBlock>
+                                    {{state && state.district && state.district[r] && state.district[r].total &&
+                                    state.district[r].total.recovered | number}}
+                                </ng-template>
+
+                                <!-- {{state && state.district && state.district[r] && state.district[r].total &&
+                                state.district[r].total.recovered | number}} -->
+                            </td>
+                            <td>
+                                <span *ngIf='state && state.district && state.district[r] && state.district[r].delta &&
+                                state.district[r].delta.deceased; else deathBlock' class="deltas "
+                                    style="color: #6c757d; "><svg xmlns="http://www.w3.org/2000/svg " width="24 "
+                                        height="24 " viewBox="0 0 24 24" fill="none " stroke="currentColor "
+                                        stroke-width="2 " stroke-linecap="round " stroke-linejoin="round ">
+                                        <line x1="12 " y1="19 " x2="12 " y2="5 "></line>
+                                        <polyline points="5 12 12 5 19 12 "></polyline>
+                                    </svg>{{state && state.district && state.district[r] &&
+                                    state.district[r].delta && state.district[r].delta.deceased | number}}
+                                    <p style="color: #000">
+                                        {{state && state.district && state.district[r] && state.district[r].total &&
+                                        state.district[r].total.deceased ? state && state.district && state.district[r] &&
+                                        state.district[r].total && state.district[r].total.deceased : 0}}
+                                    </p>
+                                </span>
+                                <ng-template #deathBlock>
+                                    {{state && state.district && state.district[r] && state.district[r].total &&
+                                    state.district[r].total.deceased ? state && state.district && state.district[r] &&
+                                    state.district[r].total && state.district[r].total.deceased : 0}}
+                                </ng-template>
+
+                                <!-- {{state && state.district && state.district[r] && state.district[r].total &&
+                                state.district[r].total.deceased ? state && state.district && state.district[r] &&
+                                state.district[r].total && state.district[r].total.deceased : 0}} -->
+                            </td>
+                        </tr>
+
+                    </ng-container>
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
