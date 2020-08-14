@@ -160,6 +160,7 @@
                         </tr>
 
                         <tr [hidden]="!state.show" *ngFor="let r of districtsCode">
+                            <td></td>
                             <td>{{r}}</td>
                             <td>
                                 <span *ngIf='state && state.district && state.district[r] && state.district[r].delta &&
