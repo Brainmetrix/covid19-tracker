@@ -3,6 +3,8 @@ import { CoronaService } from '../services/corona.service';
 import { Subscription, BehaviorSubject, interval } from 'rxjs';
 import * as M from 'materialize-css/dist/js/materialize';
 // declare const M;
+import { faLightbulb } from '@fortawesome/free-solid-svg-icons';
+declare const $: any;
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -19,7 +21,7 @@ export class AppComponent implements OnInit {
   executed = false;
   position: any;
   public onlineFlag;
-
+  faLightbulb = faLightbulb;
   constructor(
     private covid: CoronaService) { }
 
@@ -71,6 +73,14 @@ export class AppComponent implements OnInit {
       const toastHTML = '<span>Connection established !</span>';
       M.toast({ html: toastHTML, classes: 'rounded success' });
       this.executed = false;
+    }
+  }
+
+  toggleTheme() {
+    if ( $( "body" ).hasClass( "dark" )) {
+      $( "body" ).removeClass( "dark" );
+    } else {
+      $( "body" ).addClass( "dark" );
     }
   }
 

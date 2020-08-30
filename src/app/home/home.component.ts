@@ -110,9 +110,10 @@ export class HomeComponent implements OnInit {
     this.cloneStateWiseCases = [];
     this.covid.getDataStateWise().subscribe(data => {
       this.statesCode = Object.keys(data);
+      const INDIA = {name: 'India', value: 'India', Code: 'IN'};
       for (const d of this.statesCode) {
         const prepareObj = {
-          state: this.covid.getStateName(d),
+          state: this.covid.getStateName(d) ? this.covid.getStateName(d) : INDIA,
           district: data && data[d].districts,
           meta: data && data[d].meta,
           total: data && data[d].total,
@@ -121,17 +122,9 @@ export class HomeComponent implements OnInit {
         };
         this.totalStateWiseCases.push(prepareObj);
       }
+      this.totalStateWiseCases.sort(this.sortDataBasedOnConfirmedCases);
       this.cloneStateWiseCases = this.totalStateWiseCases;
       console.log('totalStateWiseCases', this.totalStateWiseCases);
-
-      // function getDataDiff(startDate, endDate) {
-      //   var diff = endDate.getTime() - startDate.getTime();
-      //   var days = Math.floor(diff / (60 * 60 * 24 * 1000));
-      //   var hours = Math.floor(diff / (60 * 60 * 1000)) - (days * 24);
-      //   var minutes = Math.floor(diff / (60 * 1000)) - ((days * 24 * 60) + (hours * 60));
-      //   var seconds = Math.floor(diff / 1000) - ((days * 24 * 60 * 60) + (hours * 60 * 60) + (minutes * 60));
-      //   return { day: days, hour: hours, minute: minutes, second: seconds };
-      // }
 
     },
       err => {
@@ -139,13 +132,11 @@ export class HomeComponent implements OnInit {
       });
   }
 
-  // calculateDailyCount(data) {
-  //   this.totalConfirmed = data.reduce(function (pre, cur) {
-  //     console.log('pre', pre);
-  //     console.log('cur', cur);
-  //     return pre + cur.total.confirmed;
-  //   }, 0);
-  // }
+  sortDataBasedOnConfirmedCases(first, second) {
+    if (first.state.name !== 'India') {
+      return second.total.confirmed - first.total.confirmed;
+    }
+  }
 
   sortByMaxCases(sortedDataBasedOnDate) {
     sortedDataBasedOnDate.forEach(item => item.statewise.sort((a, b) => {
