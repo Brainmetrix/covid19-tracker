@@ -3,7 +3,7 @@
  * Copyright 2011-2020 The Bootstrap Authors
  * Copyright 2011-2020 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
- */@font-face{font-family:archia;src:url(archia-bold-webfont.ad8463d1.ad8463d1313fed60e1d1.woff2) format("woff2");src:url(archia-medium-webfont.80da55a5.80da55a565ba8976b8e9.woff2) format("woff2");src:url(archia-semibold-webfont.890ee929.890ee929da47c4931933.woff2) format("woff2")}.delete{background-color:#ff4d4f}.update{background-color:#ffbf00}.success{background-color:#90ee90}/*!
+ */@font-face{font-family:archia;src:url(archia-bold-webfont.ad8463d1.ad8463d1313fed60e1d1.woff2) format("woff2");src:url(archia-medium-webfont.80da55a5.80da55a565ba8976b8e9.woff2) format("woff2");src:url(archia-semibold-webfont.890ee929.890ee929da47c4931933.woff2) format("woff2")}.delete{background-color:#ff4d4f}.update{background-color:#ffbf00}.success{background-color:#90ee90}.switch{align-self:flex-end;margin:.9375rem}.inner-switch{display:inline-block;cursor:pointer;border:1px solid #555;border-radius:1.25rem;width:3.125rem;text-align:center;font-size:1rem;padding:.1875rem;margin-left:.3125rem}.dark,.dark *{background-color:#222;color:#e6e6e6;border-color:#e6e6e6}/*!
  * Bootstrap v4.5.1 (https://getbootstrap.com/)
  * Copyright 2011-2020 The Bootstrap Authors
  * Copyright 2011-2020 Twitter, Inc.
