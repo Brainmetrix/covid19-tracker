@@ -5,6 +5,7 @@ import {
   faClipboardCheck, faDownload, faChartLine, faUserShield, faSkullCrossbones,
   faMinusCircle, faPlusCircle, faChevronCircleDown, faChevronCircleUp
 } from '@fortawesome/free-solid-svg-icons';
+import { Chart } from 'chart.js';
 
 @Component({
   selector: 'app-home',
@@ -44,6 +45,16 @@ export class HomeComponent implements OnInit {
   districtsCode: any;
   search: any;
   timer: any;
+  doughnut: any;
+  chart;
+  chart2 = [];
+  pie: any;
+  data1 = [];
+  stateLabel: any = [];
+  confirmedDataSet: any = [];
+  recoveredDataSet: any = [];
+  deceasedDataSet: any = [];
+  color = Chart.helpers.color;
   constructor(private covid: CoronaService) { }
 
   ngOnInit() {
@@ -55,8 +66,114 @@ export class HomeComponent implements OnInit {
       this.testData();
     }, time);
     this.testData();
+    // this.plorGraph();
   }
 
+  plorGraph() {
+
+    const defaultXAxis = {
+      barThickness: 20,
+      maxBarThickness: 20,
+      minBarLength: 10,
+      barValueSpacing: 130,
+
+      scaleLabel: {
+        display: true,
+        labelString: 'Total No. of patients',
+        stacked: false,
+      },
+      ticks: {
+        beginAtZero: true,
+        // stepSize: 5
+        min: 10000
+      }
+    };
+
+    this.chart = new Chart('bar', {
+      type: 'horizontalBar',
+      data: {
+        labels: this.stateLabel,
+        datasets: [
+          {
+            // type: 'horizontalBar',
+            label: 'Confirmed',
+            data: this.confirmedDataSet,
+            backgroundColor: '#ff4d4f',
+            borderColor: '#ff4d4f',
+            fill: true,
+            borderWidth: 5,
+            // categoryPercentage: 1,
+            barPercentage: 1,
+            // barThickness: 10,
+            // maxBarThickness: 8,
+            // minBarLength: 5,
+
+          },
+          {
+            label: 'Recoverd',
+            data: this.recoveredDataSet,
+            backgroundColor: '#28a745',
+            borderColor: '#28a745',
+            fill: true,
+            // barThickness: 10,
+            barPercentage: 1,
+
+          },
+          {
+            label: 'Death',
+            data: this.recoveredDataSet,
+            backgroundColor: '#464d53',
+            borderColor: '#464d53',
+            fill: true,
+            // barThickness: 10,
+            barPercentage: 1,
+
+          },
+        ]
+      },
+      options: {
+        barValueSpacing: 130,
+        responsive: true,
+        maintainAspectRatio: false,
+        title: {
+          display: false,
+          text: 'Confirmed Cases'
+        },
+        legend: {
+          display: true,
+          position: 'top',
+          align: 'center',
+          boxWidth: 10,
+          labels: {
+            usePointStyle: true,
+          },
+        },
+        elements: {
+          rectangle: {
+            borderWidth: 2,
+          }
+        },
+        scales: {
+          xAxes: [
+            defaultXAxis
+          ],
+          yAxes: [{
+
+            scaleLabel: {
+              display: true,
+              labelString: 'State',
+            },
+            ticks: {
+              beginAtZero: true,
+              // stepSize: 5
+              // min: 5
+            }
+          }]
+        }
+      }
+    });
+
+  }
   testData() {
     this.covid.getDailyCaseStatus().subscribe(
       response => {
@@ -110,7 +227,7 @@ export class HomeComponent implements OnInit {
     this.cloneStateWiseCases = [];
     this.covid.getDataStateWise().subscribe(data => {
       this.statesCode = Object.keys(data);
-      const INDIA = {name: 'India', value: 'India', Code: 'IN'};
+      const INDIA = { name: 'India', value: 'India', Code: 'IN' };
       for (const d of this.statesCode) {
         const prepareObj = {
           state: this.covid.getStateName(d) ? this.covid.getStateName(d) : INDIA,
@@ -123,8 +240,18 @@ export class HomeComponent implements OnInit {
         this.totalStateWiseCases.push(prepareObj);
       }
       this.totalStateWiseCases.sort(this.sortDataBasedOnConfirmedCases);
+      for (const state of this.totalStateWiseCases) {
+        this.stateLabel.push(state && state.state && state.state.name);
+        this.confirmedDataSet.push(state && state.total && state.total.confirmed);
+        this.recoveredDataSet.push(state && state.total && state.total.recovered);
+        this.deceasedDataSet.push(state && state.total && state.total.deceased);
+      }
       this.cloneStateWiseCases = this.totalStateWiseCases;
       console.log('totalStateWiseCases', this.totalStateWiseCases);
+      console.log('this.stateLabel', this.stateLabel);
+      console.log('this.confirmedDataSet', this.confirmedDataSet);
+      this.plorGraph();
+
 
     },
       err => {

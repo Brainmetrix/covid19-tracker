@@ -59,6 +59,8 @@ export class CoronaService {
   ulrDistrictwise = 'https://api.covid19india.org/state_district_wise.json';
   urlBanner = 'https://api.covid19india.org/website_data.json';
 
+  stateWiseData = 'https://covid-19india-api.herokuapp.com/v2.0/state_data';
+
   constructor(private http: HttpClient) {
     this.getDataStateWise();
   }
